@@ -3,22 +3,18 @@ function clicker() {
   const clickerSpeed = document.getElementById('clicker__speed');
   const cookie = document.getElementById('cookie');
   let count = 0;
-  let time = 0;
-  let timer;
+  let dateTime;
+  let time;
 
   cookie.addEventListener('click', () => {
-    clearInterval(timer)
-    clickerSpeed.textContent = (1/time).toFixed(2);
-    time = 0;
+    time = Date.now() - dateTime
+    dateTime = Date.now();
+    time ? clickerSpeed.textContent = (1/(time/1000)).toFixed(2) : false;
     count +=1;
     cookie.width == 200 ? cookie.width = 250 : cookie.width = 200;
     clickerCounter.textContent = count;
-    timer = setInterval(() => {
-      time += 0.1;
-      console.log(time);
-    },100)
-    time >= 10 ? clearInterval(timer) : false;
   })
 }
 
-clicker()
+ clicker()
+

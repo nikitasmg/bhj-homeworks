@@ -17,7 +17,7 @@ const holeInMole = () => {
     }
     if(lost.textContent >= 5) {
       alert('LOOSE');
-      lost.textContent = 0;
+      dead.textContent = 0;
       lost.textContent = 0;
     }
   }))
