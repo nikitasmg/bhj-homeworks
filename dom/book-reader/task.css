@@ -72,6 +72,20 @@ body {
   box-sizing: border-box;
 }
 
+.bg-color {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  border-radius: 4px;
+  margin-left: 5px;
+  box-sizing: border-box;
+}
+
+.bg-color_active {
+  box-shadow: 0 0 5px white;
+  border: 1px solid gray;
+}
+
 .color_active {
   box-shadow: 0 0 5px white;
   border: 1px solid gray;
