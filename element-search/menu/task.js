@@ -37,13 +37,15 @@ const outClick = (elements) => {
 const menuWork = (event, list) => {
   let item = event.target;
   outClick(list);
-  if (item.tagName !== "A") {
-    return "jhkkl";
-  } else {
+  if (item.tagName === "A") {
     if (item.nextElementSibling) {
       event.preventDefault();
-      disable(list);
-      item.nextElementSibling.classList.toggle("menu_active");
+      if (item.nextElementSibling.classList.contains("menu_active")) {
+        item.nextElementSibling.classList.remove("menu_active");
+      } else {
+        disable(list);
+        item.nextElementSibling.classList.add("menu_active");
+      }
     }
   }
 };

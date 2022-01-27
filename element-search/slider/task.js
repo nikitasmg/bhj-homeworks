@@ -2,12 +2,12 @@ const slidersItems = Array.from(document.querySelectorAll(".slider__item"));
 const sliderDotsArray = Array.from(document.querySelectorAll(".slider__dot"));
 const sliderDots = document.querySelector(".slider__dots");
 const sliderArrows = document.querySelector(".slider__arrows");
-let count = 0;
 
 /**
  * Close all active elements feom nodelist
  * @param {NodeList} elements
  * @param {String} options
+ * @returns {void}
  */
 
 const closeAll = (elements, options) => {
@@ -21,6 +21,7 @@ const closeAll = (elements, options) => {
  * @param {NodeList} list
  * @param {String} options
  * @param {indexOfArray} index
+ * @returns {void}
  */
 const activateElement = (list, options, index) => {
   closeAll(list, options);
@@ -29,15 +30,18 @@ const activateElement = (list, options, index) => {
 
 /**
  * Active prev slide
+ * @returns {void}
  */
 const prevSlide = () => {
-  count -= 1;
-  if (count < 0) {
-    count = slidersItems.length - 1;
+  let activeSlideIndex = slidersItems.indexOf(
+    document.querySelector(".slider__item_active")
+  );
+  activeSlideIndex -= 1;
+  if (activeSlideIndex < 0) {
+    activeSlideIndex = slidersItems.length - 1;
   }
-  console.log(count);
-  activateElement(slidersItems, "slider__item", count);
-  activateElement(sliderDotsArray, "slider__dot", count);
+  activateElement(slidersItems, "slider__item", activeSlideIndex);
+  activateElement(sliderDotsArray, "slider__dot", activeSlideIndex);
 };
 
 /**
@@ -45,13 +49,15 @@ const prevSlide = () => {
  * @returns {void}
  */
 const nextSlide = () => {
-  count += 1;
-  if (count >= slidersItems.length) {
-    count = 0;
+  let activeSlideIndex = slidersItems.indexOf(
+    document.querySelector(".slider__item_active")
+  );
+  activeSlideIndex += 1;
+  if (activeSlideIndex >= slidersItems.length) {
+    activeSlideIndex = 0;
   }
-  console.log(count);
-  activateElement(slidersItems, "slider__item", count);
-  activateElement(sliderDotsArray, "slider__dot", count);
+  activateElement(slidersItems, "slider__item", activeSlideIndex);
+  activateElement(sliderDotsArray, "slider__dot", activeSlideIndex);
 };
 
 sliderArrows.addEventListener("click", (event) => {
