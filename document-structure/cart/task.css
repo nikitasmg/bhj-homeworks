@@ -27,6 +27,7 @@ body {
   object-fit: contain;
 }
 .product {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -88,4 +89,30 @@ body {
 
 .product-shadow {
   position: absolute;
+}
+
+.cart__product-close {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 2px;
+  width: 10px;
+  background-color: black;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+.cart__product-close::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 10px;
+  background-color: black;
+  transform: rotate(270deg);
+}
+
+.img_absolute {
+  position: absolute;
+  top: 60px;
+  left: 0;
 }
