@@ -38,6 +38,7 @@ const renderCart = () => {
     </div>
     `);
   }
+  cartProducts = cartProducts.join('');
   cart.innerHTML = cartProducts;
 };
 
