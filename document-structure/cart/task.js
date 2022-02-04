@@ -1,18 +1,20 @@
-const products = document.querySelector(".products");
-const cart = document.getElementById("cart");
+const products = document.querySelector('.products');
+const cartContainer = document.getElementById('cart-container');
+const cart = document.getElementById('cart');
+let state = {};
 
 /**
- * Change product value with any listner
+ * Меняет кол-во товара в продукте по кнопке + и -
  * @param {any} event
  */
 const changeProductValue = (event) => {
   const item = event.target;
-  if (item.classList.contains("product__quantity-control")) {
+  if (item.classList.contains('product__quantity-control')) {
     let targetValue = item
-      .closest(".product__quantity-controls")
-      .querySelector(".product__quantity-value");
-    if (item.classList.contains("product__quantity-control_dec")) {
-      if (targetValue.innerText !== "1") {
+      .closest('.product__quantity-controls')
+      .querySelector('.product__quantity-value');
+    if (item.classList.contains('product__quantity-control_dec')) {
+      if (targetValue.innerText !== '1') {
         targetValue.innerText = +targetValue.innerText - 1;
       }
     } else {
@@ -21,74 +23,97 @@ const changeProductValue = (event) => {
   }
 };
 
+/**Рендерит корзину из объекта state
+ * @paramm
+ */
+const renderCart = () => {
+  let cartProducts = [];
+  for (let key in state) {
+    const elem = state[key];
+    cartProducts.push(`
+    <div class="cart__product" data-id=${elem.id}>
+      <img class="cart__product-image" src=${elem.imgSrc}>
+      <div class="cart__product-count">${elem.count}</div>
+      <div class="cart__product-close"></div>
+    </div>
+    `);
+  }
+  cart.innerHTML = cartProducts;
+};
+
 /**
- * Add product in cart
+ * Добавляет выбранный продукт в объект state
  * @param {any} event
  */
-const addToCart = (event) => {
+const addToState = (event) => {
   const item = event.target;
-  const product = item.closest(".product");
-  const imgSrc = product.querySelector(".product__image").src;
+  const product = item.closest('.product');
+  const imgSrc = product.querySelector('.product__image').src;
   const id = product.dataset.id;
   const productCount = product.querySelector(
-    ".product__quantity-value"
+    '.product__quantity-value'
   ).innerText;
-
-  if (item.classList.contains("product__add")) {
-    if (!cart.querySelector(".cart__product")) {
-      cart.insertAdjacentHTML(
-        "beforeend",
-        ` <div class="cart__product" data-id="${id}">
-            <img class="cart__product-image" src="${imgSrc}">
-            <div class="cart__product-count">${productCount}</div>
-            <div class="cart__product-close"></div>
-          </div> `
-      );
-    } else {
-      const productsInCart = Array.from(
-        document.querySelectorAll(".cart__product")
-      );
-      if (productsInCart.some((el) => el.dataset.id === id)) {
-        const cartProduct = productsInCart.filter(
-          (el) => el.dataset.id === id
-        )[0];
-        let cartProductCount = cartProduct.querySelector(
-          ".cart__product-count"
-        );
-        cartProductCount.innerText =
-          +cartProductCount.innerText + +productCount;
-      } else {
-        console.log("еще нет");
-        cart.insertAdjacentHTML(
-          "beforeend",
-          ` <div class="cart__product" data-id="${id}">
-                  <img class="cart__product-image" src="${imgSrc}">
-                  <div class="cart__product-count">${productCount}</div>
-                  <div class="cart__product-close"></div>
-                </div> `
-        );
-      }
-    }
+  if (!state[id]) {
+    state[id] = {
+      id: id,
+      imgSrc: imgSrc,
+      count: productCount,
+    };
+  } else {
+    const totalCount = Number(state[id].count) + Number(productCount);
+    state[id] = {
+      id: id,
+      imgSrc: imgSrc,
+      count: totalCount,
+    };
   }
 };
 
 /**
- * Remove target product from cart
+ * Добавляет объект state в local storage
+ * @param
+ */
+
+const addToLocalStorage = () => {
+  localStorage.setItem('stateCart', JSON.stringify(state));
+};
+
+/**
+ * Удаляет выбранный продукт из объекта state
  * @param {any} event
  */
 const removeFromCart = (event) => {
   const item = event.target;
-  if (item.classList.contains("cart__product-close")) {
-    const elementForRemove = item.closest(".cart__product");
-    cart.removeChild(elementForRemove);
+  if (item.classList.contains('cart__product-close')) {
+    const dataId = item.closest('.cart__product').getAttribute('data-id');
+    delete state[dataId];
   }
 };
 
-products.addEventListener("click", (event) => {
+//События на добавления товара в state
+products.addEventListener('click', (event) => {
   changeProductValue(event);
-  addToCart(event);
+
+  if (event.target.classList.contains('product__add')) {
+    addToState(event);
+    renderCart();
+    addToLocalStorage();
+  }
 });
 
-cart.addEventListener("click", (event) => {
-  removeFromCart(event);
+//События на кнопки удаления из state
+cart.addEventListener('click', (event) => {
+  console.log(event.target);
+  if (event.target.classList.contains('cart__product-close')) {
+    removeFromCart(event);
+    renderCart();
+    addToLocalStorage();
+  }
+});
+
+//Рендерит корзину из local storage после загрузки документа
+document.addEventListener('DOMContentLoaded', () => {
+  const stateFromLocalStorage = JSON.parse(localStorage.getItem('stateCart'));
+  state = stateFromLocalStorage;
+  renderCart();
 });

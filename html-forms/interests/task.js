@@ -1,12 +1,14 @@
-const mainInterest = document.querySelector(".interests_main");
+const mainInterest = document.querySelector('.interests_main');
 
-mainInterest.addEventListener("click", (event) => {
+mainInterest.addEventListener('click', (event) => {
   const target = event.target;
+  console.log(event.target);
+  console.log(event.currentTarget);
 
-  if (target.type !== "checkbox") {
+  if (target.type !== 'checkbox') {
     return;
   } else {
-    const closestActiveList = target.closest(".interests_active");
+    const closestActiveList = target.closest('.interests_active');
     if (closestActiveList) {
       activateParent(target);
       if (target.parentNode.nextElementSibling) {
@@ -25,7 +27,7 @@ mainInterest.addEventListener("click", (event) => {
  */
 const activateChilds = (target) => {
   const list =
-    target.parentNode.nextElementSibling.querySelectorAll(".interest__check");
+    target.parentNode.nextElementSibling.querySelectorAll('.interest__check');
   list.forEach((element) => {
     if (target.checked) {
       element.checked = true;
@@ -41,33 +43,32 @@ const activateChilds = (target) => {
  */
 const activateParent = (target) => {
   const childrens = Array.from(
-    target.closest(".interests_active").querySelectorAll(".interest__check")
+    target.closest('.interests_active').querySelectorAll('.interest__check')
   );
   const parent =
-    target.closest(".interests_active").previousElementSibling
+    target.closest('.interests_active').previousElementSibling
       .firstElementChild;
-  debugger;
 
   if (childrens.every((el) => el.checked)) {
     parent.indeterminate = false;
     parent.checked = true;
-    if (parent.closest(".interests_active")) {
+    if (parent.closest('.interests_active')) {
       activateParent(parent);
     }
   } else if (childrens.every((el) => !el.checked)) {
     parent.indeterminate = false;
     parent.checked = false;
-    if (parent.closest(".interests_active")) {
+    if (parent.closest('.interests_active')) {
       activateParent(parent);
     }
   } else if (childrens.some((el) => el.checked)) {
     parent.indeterminate = true;
-    if (parent.closest(".interests_active")) {
+    if (parent.closest('.interests_active')) {
       activateParent(parent);
     }
   } else {
     parent.indeterminate = false;
-    if (parent.closest(".interests_active")) {
+    if (parent.closest('.interests_active')) {
       activateParent(parent);
     }
   }
