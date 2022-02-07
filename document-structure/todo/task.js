@@ -3,6 +3,11 @@ const taskList = document.getElementById('tasks__list');
 const taskForm = document.getElementById('tasks__form');
 const input = document.getElementById('task__input');
 let count = 0;
+
+/**
+ * Добавляет в объект state
+ * @param {any} event
+ */
 const addToState = (value) => {
   state[count] = {
     task: value,
@@ -10,6 +15,9 @@ const addToState = (value) => {
   };
 };
 
+/**Рендерит задачи из объекта state
+ * @paramm
+ */
 const renderState = () => {
   let tasks = [];
   for (let key in state) {
@@ -27,6 +35,10 @@ const renderState = () => {
   taskList.innerHTML = tasks;
 };
 
+/**
+ * Удаляет выбранную задачу из объекта state
+ * @param {any} event
+ */
 const removeFromState = (event) => {
   target = event.target;
 
@@ -38,6 +50,15 @@ const removeFromState = (event) => {
   }
 };
 
+/**
+ * Добавляет объект state в local storage
+ * @param
+ */
+
+const addToLocalStorage = () => {
+  localStorage.setItem('stateTasks', JSON.stringify(state));
+};
+
 taskForm.addEventListener('submit', (e) => {
   count = count + 1;
   e.preventDefault();
@@ -45,10 +66,19 @@ taskForm.addEventListener('submit', (e) => {
   input.value;
   addToState(input.value);
   renderState();
+  addToLocalStorage();
   input.value = '';
 });
 
 taskList.addEventListener('click', (event) => {
   removeFromState(event);
+  addToLocalStorage();
+  renderState();
+});
+
+//Рендерит корзину из local storage после загрузки документа
+document.addEventListener('DOMContentLoaded', () => {
+  const stateFromLocalStorage = JSON.parse(localStorage.getItem('stateTasks'));
+  state = stateFromLocalStorage;
   renderState();
 });
