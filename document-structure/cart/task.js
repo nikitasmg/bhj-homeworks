@@ -31,7 +31,7 @@ const renderCart = () => {
   for (let key in state) {
     const elem = state[key];
     cartProducts.push(`
-    <div class="cart__product" data-id=${elem.id}>
+    <div class="cart__product" data-id=${key}>
       <img class="cart__product-image" src=${elem.imgSrc}>
       <div class="cart__product-count">${elem.count}</div>
       <div class="cart__product-close"></div>
@@ -56,14 +56,12 @@ const addToState = (event) => {
   ).innerText;
   if (!state[id]) {
     state[id] = {
-      id: id,
       imgSrc: imgSrc,
       count: productCount,
     };
   } else {
     const totalCount = Number(state[id].count) + Number(productCount);
     state[id] = {
-      id: id,
       imgSrc: imgSrc,
       count: totalCount,
     };
@@ -115,6 +113,6 @@ cart.addEventListener('click', (event) => {
 //Рендерит корзину из local storage после загрузки документа
 document.addEventListener('DOMContentLoaded', () => {
   const stateFromLocalStorage = JSON.parse(localStorage.getItem('stateCart'));
-  state = stateFromLocalStorage;
+  state = { ...stateFromLocalStorage };
   renderCart();
 });

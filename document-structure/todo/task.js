@@ -1,18 +1,14 @@
-let state = {};
+let state = [];
 const taskList = document.getElementById('tasks__list');
 const taskForm = document.getElementById('tasks__form');
 const input = document.getElementById('task__input');
-let count = 0;
 
 /**
  * Добавляет в объект state
  * @param {any} event
  */
 const addToState = (value) => {
-  state[count] = {
-    task: value,
-    id: count,
-  };
+  state.push(value);
 };
 
 /**Рендерит задачи из объекта state
@@ -20,17 +16,18 @@ const addToState = (value) => {
  */
 const renderState = () => {
   let tasks = [];
-  for (let key in state) {
-    const elem = state[key];
-    tasks.push(`
-            <div class="task" data-id = ${elem.id}>
+  state.forEach((el, i) =>
+    tasks.push(
+      `
+            <div class="task" data-id = ${i}>
                 <div class="task__title">
-                   ${elem.task}     
+                   ${el}     
                 </div>
                 <a href="#" class="task__remove">&times;</a>
             </div> 
-        `);
-  }
+        `
+    )
+  );
   tasks = tasks.join('');
   taskList.innerHTML = tasks;
 };
@@ -45,8 +42,7 @@ const removeFromState = (event) => {
   if (target.classList.contains('task__remove')) {
     const parent = target.closest('.task');
     const id = parent.getAttribute('data-id');
-    console.log(id);
-    delete state[id];
+    state.splice(id, 1);
   }
 };
 
@@ -60,14 +56,13 @@ const addToLocalStorage = () => {
 };
 
 taskForm.addEventListener('submit', (e) => {
-  count = count + 1;
   e.preventDefault();
-  target = e.target;
-  input.value;
-  addToState(input.value);
-  renderState();
-  addToLocalStorage();
-  input.value = '';
+  if (input.value !== '') {
+    addToState(input.value);
+    renderState();
+    addToLocalStorage();
+    input.value = '';
+  }
 });
 
 taskList.addEventListener('click', (event) => {
@@ -79,6 +74,7 @@ taskList.addEventListener('click', (event) => {
 //Рендерит корзину из local storage после загрузки документа
 document.addEventListener('DOMContentLoaded', () => {
   const stateFromLocalStorage = JSON.parse(localStorage.getItem('stateTasks'));
-  state = stateFromLocalStorage;
+  state = [...stateFromLocalStorage];
+  console.log(state);
   renderState();
 });
