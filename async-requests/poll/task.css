@@ -9,3 +9,8 @@ body {
 .poll__title {
   margin-bottom: 20px;
 }
+
+.votes {
+  display: flex;
+  flex-direction: column;
+}
